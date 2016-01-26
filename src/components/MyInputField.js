@@ -7,7 +7,7 @@ export default class MyInputField extends React.Component {
 
   render() {
     return (
-      <input className="text-field-large" type="text" value={this.props.value} onKeyUp={this.props.onKeyUp} />
+      <input className="text-field-large" type="text" value={this.props.value} onChange={this.props.handleChange} />
     );
   }
 }

@@ -7,28 +7,26 @@ class Container extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "",
-      characterCounts: {}
+      text: "foobar"
     };
-    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.onTextChange = this.onTextChange.bind(this);
   }
 
-  handleKeyUp(e) {
+  onTextChange(e) {
     var newValue = e.target.value;
-    console.log(getCharacterCounts(newValue));
-    // this.setState({
-    //   text: newValue,
-    //   characterCounts: ""//getCharacterCounts(newValue)
-    // });
+    this.setState({
+      text: newValue,
+      charMap: getCharacterMap(newValue)
+    });
   }
 
   render() {
     return (
       <div>
-        <MyInputField onKeyUp={this.handleKeyUp} />
+        <MyInputField handleChange={this.onTextChange} value={this.state.text} />
         <div className="frequency-distribution-wrapper">
-          <FrequencyDistribution characterCounts={this.state.characterCounts} />
-        <div>
+          <FrequencyDistribution characterMap={this.state.charMap} />
+        </div>
       </div>
     );
   }
@@ -36,15 +34,48 @@ class Container extends React.Component {
 
 ReactDOM.render(<Container />, document.getElementById('react-container'));
 
-// function getCharacterCounts(text) {
-//   var characterCounts = {};
-//   for (var i in text) {
-//     var character = (text[i] + "").toLowerCase();
-//     if (!characterCounts[character]) {
-//       characterCounts[character] = 1;
-//     } else {
-//       characterCounts[character] += 1;
-//     }
+// class Container extends React.Component {
+//   constructor() {
+//     super();
+//     this.state = {
+//       text: "",
+//       characterCounts: {}
+//     };
+//     this.handleKeyUp = this.handleKeyUp.bind(this);
 //   }
-//   return characterCounts;
+//
+//   handleKeyUp(e) {
+//     var newValue = e.target.value;
+//     console.log(getCharacterCounts(newValue));
+//     this.setState({
+//       text: newValue,
+//       characterCounts: getCharacterCounts(newValue)
+//     });
+//   }
+//
+//   render() {
+//     return (
+//       <div>
+//         <MyInputField onKeyUp={this.handleKeyUp} />
+//         <div className="frequency-distribution-wrapper">
+//           <FrequencyDistribution characterCounts={this.state.characterCounts} />
+//         <div>
+//       </div>
+//     );
+//   }
 // }
+//
+// ReactDOM.render(<Container />, document.getElementById('react-container'));
+//
+function getCharacterMap(text) {
+  var characterCounts = {};
+  for (var i in text) {
+    var character = (text[i] + "").toLowerCase();
+    if (!characterCounts[character]) {
+      characterCounts[character] = 1;
+    } else {
+      characterCounts[character] += 1;
+    }
+  }
+  return characterCounts;
+}

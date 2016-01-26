@@ -46,6 +46,8 @@
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -73,29 +75,93 @@
 	var Container = function (_React$Component) {
 	  _inherits(Container, _React$Component);
 
-	  function Container() {
+	  function Container(props) {
 	    _classCallCheck(this, Container);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Container).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
+
+	    _this.state = {
+	      text: "foobar"
+	    };
+	    _this.onTextChange = _this.onTextChange.bind(_this);
+	    return _this;
 	  }
+
+	  _createClass(Container, [{
+	    key: 'onTextChange',
+	    value: function onTextChange(e) {
+	      var newValue = e.target.value;
+	      this.setState({
+	        text: newValue,
+	        charMap: getCharacterMap(newValue)
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_MyInputField2.default, { handleChange: this.onTextChange, value: this.state.text }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'frequency-distribution-wrapper' },
+	          _react2.default.createElement(_FrequencyDistribution2.default, { characterMap: this.state.charMap })
+	        )
+	      );
+	    }
+	  }]);
 
 	  return Container;
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(Container, null), document.getElementById('react-container'));
 
-	// function getCharacterCounts(text) {
-	//   var characterCounts = {};
-	//   for (var i in text) {
-	//     var character = (text[i] + "").toLowerCase();
-	//     if (!characterCounts[character]) {
-	//       characterCounts[character] = 1;
-	//     } else {
-	//       characterCounts[character] += 1;
-	//     }
+	// class Container extends React.Component {
+	//   constructor() {
+	//     super();
+	//     this.state = {
+	//       text: "",
+	//       characterCounts: {}
+	//     };
+	//     this.handleKeyUp = this.handleKeyUp.bind(this);
 	//   }
-	//   return characterCounts;
+	//
+	//   handleKeyUp(e) {
+	//     var newValue = e.target.value;
+	//     console.log(getCharacterCounts(newValue));
+	//     this.setState({
+	//       text: newValue,
+	//       characterCounts: getCharacterCounts(newValue)
+	//     });
+	//   }
+	//
+	//   render() {
+	//     return (
+	//       <div>
+	//         <MyInputField onKeyUp={this.handleKeyUp} />
+	//         <div className="frequency-distribution-wrapper">
+	//           <FrequencyDistribution characterCounts={this.state.characterCounts} />
+	//         <div>
+	//       </div>
+	//     );
+	//   }
 	// }
+	//
+	// ReactDOM.render(<Container />, document.getElementById('react-container'));
+	//
+	function getCharacterMap(text) {
+	  var characterCounts = {};
+	  for (var i in text) {
+	    var character = (text[i] + "").toLowerCase();
+	    if (!characterCounts[character]) {
+	      characterCounts[character] = 1;
+	    } else {
+	      characterCounts[character] += 1;
+	    }
+	  }
+	  return characterCounts;
+	}
 
 /***/ },
 /* 1 */
@@ -19781,7 +19847,7 @@
 	  _createClass(MyInputField, [{
 	    key: "render",
 	    value: function render() {
-	      return _react2.default.createElement("input", { className: "text-field-large", type: "text", value: this.props.value, onKeyUp: this.props.onKeyUp });
+	      return _react2.default.createElement("input", { className: "text-field-large", type: "text", value: this.props.value, onChange: this.props.handleChange });
 	    }
 	  }]);
 
