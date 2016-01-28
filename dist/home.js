@@ -81,9 +81,11 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
 
 	    _this.state = {
-	      text: "foobar"
+	      text: "",
+	      characterMap: []
 	    };
 	    _this.onTextChange = _this.onTextChange.bind(_this);
+	    _this.getCharacterMap = _this.getCharacterMap.bind(_this);
 	    return _this;
 	  }
 
@@ -93,8 +95,28 @@
 	      var newValue = e.target.value;
 	      this.setState({
 	        text: newValue,
-	        charMap: getCharacterMap(newValue)
+	        characterMap: this.getCharacterMap(newValue)
 	      });
+	    }
+	  }, {
+	    key: 'getCharacterMap',
+	    value: function getCharacterMap(text) {
+	      var characters = text.split('').map(function (char) {
+	        return char.toLowerCase();
+	      }).reduce(function (memo, next) {
+	        memo[next] = memo[next] ? memo[next] + 1 : 1;
+	        return memo;
+	      }, {});
+	      console.log("got this far in getCharacterMap");
+	      var result = [];
+	      for (var char in characters) {
+	        result.push({
+	          character: char,
+	          count: characters[char]
+	        });
+	      }
+	      console.log(result);
+	      return result;
 	    }
 	  }, {
 	    key: 'render',
@@ -106,7 +128,7 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'frequency-distribution-wrapper' },
-	          _react2.default.createElement(_FrequencyDistribution2.default, { characterMap: this.state.charMap })
+	          _react2.default.createElement(_FrequencyDistribution2.default, { characterMap: this.state.characterMap })
 	        )
 	      );
 	    }
@@ -150,18 +172,6 @@
 	//
 	// ReactDOM.render(<Container />, document.getElementById('react-container'));
 	//
-	function getCharacterMap(text) {
-	  var characterCounts = {};
-	  for (var i in text) {
-	    var character = (text[i] + "").toLowerCase();
-	    if (!characterCounts[character]) {
-	      characterCounts[character] = 1;
-	    } else {
-	      characterCounts[character] += 1;
-	    }
-	  }
-	  return characterCounts;
-	}
 
 /***/ },
 /* 1 */
@@ -19886,16 +19896,38 @@
 	  function FrequencyDistribution(props) {
 	    _classCallCheck(this, FrequencyDistribution);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(FrequencyDistribution).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FrequencyDistribution).call(this, props));
+
+	    _this.displayCharacter = _this.displayCharacter.bind(_this);
+	    return _this;
 	  }
 
 	  _createClass(FrequencyDistribution, [{
-	    key: 'render',
-	    value: function render() {
+	    key: 'displayCharacter',
+	    value: function displayCharacter(item) {
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'Hello Character'
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          item.character
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          item.count
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      console.log(this.props.characterMap);
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        this.props.characterMap.map(this.displayCharacter)
 	      );
 	    }
 	  }]);

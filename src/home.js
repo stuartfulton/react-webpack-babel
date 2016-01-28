@@ -7,17 +7,38 @@ class Container extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "foobar"
+      text: "",
+      characterMap: []
     };
     this.onTextChange = this.onTextChange.bind(this);
+    this.getCharacterMap = this.getCharacterMap.bind(this);
   }
 
   onTextChange(e) {
     var newValue = e.target.value;
     this.setState({
       text: newValue,
-      charMap: getCharacterMap(newValue)
+      characterMap: this.getCharacterMap(newValue)
     });
+  }
+
+  getCharacterMap(text) {
+    var characters = text.split('')
+      .map(char => char.toLowerCase())
+      .reduce((memo, next) => {
+        memo[next] = memo[next]? memo[next] + 1 : 1;
+        return memo;
+      }, {});
+      console.log("got this far in getCharacterMap");
+      var result = [];
+      for (let char in characters) {
+        result.push({
+          character: char,
+          count: characters[char]
+        });
+      }
+      console.log(result);
+      return result;
   }
 
   render() {
@@ -25,7 +46,7 @@ class Container extends React.Component {
       <div>
         <MyInputField handleChange={this.onTextChange} value={this.state.text} />
         <div className="frequency-distribution-wrapper">
-          <FrequencyDistribution characterMap={this.state.charMap} />
+          <FrequencyDistribution characterMap={this.state.characterMap} />
         </div>
       </div>
     );
@@ -67,15 +88,3 @@ ReactDOM.render(<Container />, document.getElementById('react-container'));
 //
 // ReactDOM.render(<Container />, document.getElementById('react-container'));
 //
-function getCharacterMap(text) {
-  var characterCounts = {};
-  for (var i in text) {
-    var character = (text[i] + "").toLowerCase();
-    if (!characterCounts[character]) {
-      characterCounts[character] = 1;
-    } else {
-      characterCounts[character] += 1;
-    }
-  }
-  return characterCounts;
-}
