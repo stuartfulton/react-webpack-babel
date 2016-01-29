@@ -70,7 +70,14 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // This is the core of React
+
+	// This is the part of React that draws to the browser
+
+	// MyInputField and FrequencyDistribution are React components we have defined
+
+	// This class will become a React component, which can be drawn to the DOM as
+	// you specify in the "render" method, which every React component must have.
 
 	var Container = function (_React$Component) {
 	  _inherits(Container, _React$Component);
@@ -78,12 +85,17 @@
 	  function Container(props) {
 	    _classCallCheck(this, Container);
 
+	    // Initialize the state variable. "state" is a special variable in React
+
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Container).call(this, props));
 
 	    _this.state = {
 	      text: "",
 	      characterMap: []
 	    };
+
+	    // In ES6 / ES2015, these methods are not bound to instances automatically
+	    // so you must do it manually.
 	    _this.onTextChange = _this.onTextChange.bind(_this);
 	    _this.getCharacterMap = _this.getCharacterMap.bind(_this);
 	    return _this;
@@ -92,6 +104,9 @@
 	  _createClass(Container, [{
 	    key: 'onTextChange',
 	    value: function onTextChange(e) {
+	      // This is called every time the user enters a letter into the text box.
+	      // this.setState changes the state of the React component. React components
+	      // automatically ...react... to every change in state
 	      var newValue = e.target.value;
 	      this.setState({
 	        text: newValue,
@@ -101,6 +116,15 @@
 	  }, {
 	    key: 'getCharacterMap',
 	    value: function getCharacterMap(text) {
+	      // This method takes a string of text from the user and
+	      // counts the instances of each letter of the alphabet in it
+
+	      // "text" is the input from the text field.
+	      // First split the characters into an array and transform them all to lowercase.
+	      // Second, limit them to only the letters of the Roman alphabet.
+	      // Third, turn the array of characters ( ['a', 'b', 'c', 'c', 'c'] )
+	      // into an object with character counts ( { a:1, b:1, c:3 } )
+	      // (The 'reduce' portion of the code does that.)
 	      var characters = text.split('').map(function (char) {
 	        return char.toLowerCase();
 	      }).filter(function (char) {
@@ -109,6 +133,9 @@
 	        memo[next] = memo[next] ? memo[next] + 1 : 1;
 	        return memo;
 	      }, {});
+
+	      // Once you have the object with character counts, turn it into an array of simple objects.
+	      // [ { a:1 }, { b:1 }, { c:3 } ]
 	      var result = [];
 	      for (var char in characters) {
 	        result.push({
@@ -116,6 +143,9 @@
 	          count: characters[char]
 	        });
 	      }
+
+	      // Now sort the objects to put the highest counts first,
+	      // and sort objects with equal counts alphabetically
 	      return result.sort(function (item1, item2) {
 	        if (item1.count === item2.count) {
 	          if (item1.character === item2.character) return 0;
@@ -127,6 +157,12 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      // The HTML-like syntax here is JSX, React's JavaScript syntax extension.
+	      // You can also write this in vanilla JavaScript, but few people actually do.
+	      // MyInputField and FrequencyDistribution are React components that we have
+	      // defined elsewhere. Properties such as handleChange, value, and characterMap
+	      // are passed into these components through the "props" property. Inside the
+	      // components, you'd refer to them as this.props.onTextChange, for instance.
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -143,41 +179,12 @@
 	  return Container;
 	}(_react2.default.Component);
 
-	_reactDom2.default.render(_react2.default.createElement(Container, null), document.getElementById('react-container'));
+	// This is where the React components are actually drawn to the screen. Note
+	// that render is a method of ReactDOM instead of React. Facebook separated the
+	// core and rendering portions of React so React code can be reused for native
+	// applications as well as web-based ones.
 
-	// class Container extends React.Component {
-	//   constructor() {
-	//     super();
-	//     this.state = {
-	//       text: "",
-	//       characterCounts: {}
-	//     };
-	//     this.handleKeyUp = this.handleKeyUp.bind(this);
-	//   }
-	//
-	//   handleKeyUp(e) {
-	//     var newValue = e.target.value;
-	//     console.log(getCharacterCounts(newValue));
-	//     this.setState({
-	//       text: newValue,
-	//       characterCounts: getCharacterCounts(newValue)
-	//     });
-	//   }
-	//
-	//   render() {
-	//     return (
-	//       <div>
-	//         <MyInputField onKeyUp={this.handleKeyUp} />
-	//         <div className="frequency-distribution-wrapper">
-	//           <FrequencyDistribution characterCounts={this.state.characterCounts} />
-	//         <div>
-	//       </div>
-	//     );
-	//   }
-	// }
-	//
-	// ReactDOM.render(<Container />, document.getElementById('react-container'));
-	//
+	_reactDom2.default.render(_react2.default.createElement(Container, null), document.getElementById('react-container'));
 
 /***/ },
 /* 1 */
@@ -19849,7 +19856,13 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // This is the core of React. ReactDOM is not loaded here because we're not
+	// rendering to the DOM in this file.
+
+	// This simple React component has no internal state. It draws a text field,
+	// renders a value inside it, and when the value changes, triggers whatever
+	// event handler you send as the "handleChange" attribute when you reference
+	// the component. e.g. <MyInputField value={myText} handleChange={myEventHandler} />
 
 	var MyInputField = function (_React$Component) {
 	  _inherits(MyInputField, _React$Component);
@@ -19894,7 +19907,14 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // This is the core of React. ReactDOM is not loaded here because we're not
+	// rendering to the DOM in this file.
+
+	// This simple React component has no internal state. It renders a series of
+	// divs displaying a character and listing how many times that character
+	// appears in the entered text. Actually, by the time the text gets to this
+	// component, it has already been processed into an array of objects like this:
+	// [ { a:1 }, { b:2 }, { c:3 } ]
 
 	var FrequencyDistribution = function (_React$Component) {
 	  _inherits(FrequencyDistribution, _React$Component);
@@ -19911,9 +19931,13 @@
 	  _createClass(FrequencyDistribution, [{
 	    key: "displayCharacter",
 	    value: function displayCharacter(item) {
+	      // This helper is called for each item in this.props.characterMap
+	      // "key" is a special property that must be unique per item in order
+	      // to help React manage which DOM elements to keep and destroy for
+	      // optimal performance. If it is absent. React will warn you in the console.
 	      return _react2.default.createElement(
 	        "div",
-	        { className: "character-display" },
+	        { className: "character-display", key: item.character },
 	        _react2.default.createElement(
 	          "span",
 	          { className: "character-name" },
@@ -19929,7 +19953,10 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      console.log(this.props.characterMap);
+	      // Simpy render a div with the css class "character-results", and fill it
+	      // with the elements defined in displayCharacter for every item in the array
+	      // you send to characterMap when you call this component.
+	      // e.g. <FrequencyDistribution characterMap={myArrayOfObjects} />
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "character-results" },
