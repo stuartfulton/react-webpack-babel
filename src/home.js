@@ -25,11 +25,13 @@ class Container extends React.Component {
   getCharacterMap(text) {
     var characters = text.split('')
       .map(char => char.toLowerCase())
+      .filter(function(char){
+        return 'abcdefghijklmnopqrstuvwxyz'.indexOf(char) !== -1;
+      })
       .reduce((memo, next) => {
         memo[next] = memo[next]? memo[next] + 1 : 1;
         return memo;
       }, {});
-      console.log("got this far in getCharacterMap");
       var result = [];
       for (let char in characters) {
         result.push({
@@ -37,8 +39,13 @@ class Container extends React.Component {
           count: characters[char]
         });
       }
-      console.log(result);
-      return result;
+      return result.sort(function(item1, item2) {
+        if (item1.count === item2.count) {
+          if (item1.character === item2.character) return 0;
+          return item1.character > item2.character? 1 : -1;
+        }
+        return item1.count < item2.count? 1 : -1;
+      });
   }
 
   render() {

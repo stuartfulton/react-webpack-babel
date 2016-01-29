@@ -103,11 +103,12 @@
 	    value: function getCharacterMap(text) {
 	      var characters = text.split('').map(function (char) {
 	        return char.toLowerCase();
+	      }).filter(function (char) {
+	        return 'abcdefghijklmnopqrstuvwxyz'.indexOf(char) !== -1;
 	      }).reduce(function (memo, next) {
 	        memo[next] = memo[next] ? memo[next] + 1 : 1;
 	        return memo;
 	      }, {});
-	      console.log("got this far in getCharacterMap");
 	      var result = [];
 	      for (var char in characters) {
 	        result.push({
@@ -115,8 +116,13 @@
 	          count: characters[char]
 	        });
 	      }
-	      console.log(result);
-	      return result;
+	      return result.sort(function (item1, item2) {
+	        if (item1.count === item2.count) {
+	          if (item1.character === item2.character) return 0;
+	          return item1.character > item2.character ? 1 : -1;
+	        }
+	        return item1.count < item2.count ? 1 : -1;
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -19870,7 +19876,7 @@
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -19903,29 +19909,29 @@
 	  }
 
 	  _createClass(FrequencyDistribution, [{
-	    key: 'displayCharacter',
+	    key: "displayCharacter",
 	    value: function displayCharacter(item) {
 	      return _react2.default.createElement(
-	        'div',
-	        null,
+	        "div",
+	        { className: "bar" },
 	        _react2.default.createElement(
-	          'span',
-	          null,
+	          "span",
+	          { className: "character-name" },
 	          item.character
 	        ),
 	        _react2.default.createElement(
-	          'span',
-	          null,
+	          "span",
+	          { className: "character-count" },
 	          item.count
 	        )
 	      );
 	    }
 	  }, {
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      console.log(this.props.characterMap);
 	      return _react2.default.createElement(
-	        'div',
+	        "div",
 	        null,
 	        this.props.characterMap.map(this.displayCharacter)
 	      );

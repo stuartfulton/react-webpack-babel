@@ -8,9 +8,9 @@ export default class FrequencyDistribution extends React.Component {
 
   displayCharacter(item) {
     return (
-      <div>
-        <span>{item.character}</span>
-        <span>{item.count}</span>
+      <div className="bar">
+        <span className="character-name">{item.character}</span>
+        <span className="character-count">{item.count}</span>
       </div>
     );
   }
