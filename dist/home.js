@@ -19913,7 +19913,7 @@
 	    value: function displayCharacter(item) {
 	      return _react2.default.createElement(
 	        "div",
-	        { className: "bar" },
+	        { className: "character-display" },
 	        _react2.default.createElement(
 	          "span",
 	          { className: "character-name" },
@@ -19932,7 +19932,7 @@
 	      console.log(this.props.characterMap);
 	      return _react2.default.createElement(
 	        "div",
-	        null,
+	        { className: "character-results" },
 	        this.props.characterMap.map(this.displayCharacter)
 	      );
 	    }

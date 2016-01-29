@@ -8,7 +8,7 @@ export default class FrequencyDistribution extends React.Component {
 
   displayCharacter(item) {
     return (
-      <div className="bar">
+      <div className="character-display">
         <span className="character-name">{item.character}</span>
         <span className="character-count">{item.count}</span>
       </div>
@@ -18,7 +18,7 @@ export default class FrequencyDistribution extends React.Component {
   render() {
     console.log(this.props.characterMap);
     return (
-      <div>
+      <div className="character-results">
         {
           this.props.characterMap.map(this.displayCharacter)
         }
